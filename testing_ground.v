@@ -12,11 +12,11 @@ Defined.
 
 Compute (max 4 6).
 
-Definition max_val {x y: nat} := 
-  proj1_sig (max x y).
+Definition max_val x y := proj1_sig (max x y).
 
-Definition max_proof {x y: nat} := 
-  proj2_sig (max x y).
+Definition max_proof x y := proj2_sig (max x y).
+
+
 
 Compute (max 3 4).
 
@@ -24,3 +24,14 @@ Compute (max 3 4).
 Compute (proj1_sig (max 3 4)).
 
 Compute (proj2_sig (max 3 4)).
+
+
+Compute (max_val 3 4).
+
+(* You can also do test cases *)
+Example test_max_1: max_val 3 4 = 4.
+Proof. reflexivity. Qed.
+
+Example test_max_2: max_val 5 2 = 5.
+Proof. reflexivity. Qed.
+
