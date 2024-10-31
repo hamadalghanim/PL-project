@@ -1,4 +1,5 @@
 Require Import Coq.Arith.Arith.
+(* http://adam.chlipala.net/cpdt/html/Subset.html *)
 
 Definition max (x y: nat): {v: nat | v >= x /\ v >= y}.
   refine (
@@ -16,9 +17,6 @@ Definition max_val x y := proj1_sig (max x y).
 
 Definition max_proof x y := proj2_sig (max x y).
 
-
-
-Compute (max 3 4).
 
 (* To get just the value part *)
 Compute (proj1_sig (max 3 4)).
