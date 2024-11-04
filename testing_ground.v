@@ -1,4 +1,5 @@
 Require Import Coq.Arith.Arith.
+Require Import Notations.
 (* http://adam.chlipala.net/cpdt/html/Subset.html *)
 (* Definition le_ge_dec n m : {n <= m} + {n >= m}. *)
 (* 
@@ -12,9 +13,16 @@ using normal Nat.le wont work because there wont be an assumption in our proof
 
  *)
 Locate le_ge_dec.
+
+Definition less_than_or_eq n m : {n <= m} + {n >= m}.
+  intros; elim (le_lt_dec n m); auto with arith.
+Defined.
+
+
+
 Definition max (x y: nat): {v: nat | v >= x /\ v >= y}.
   refine (
-    if le_ge_dec x y
+    if less_than_or_eq x y
     then exist _ y _
     else exist _ x _
   ).
