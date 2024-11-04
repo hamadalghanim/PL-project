@@ -1,7 +1,17 @@
 Require Import Coq.Arith.Arith.
 (* http://adam.chlipala.net/cpdt/html/Subset.html *)
 (* Definition le_ge_dec n m : {n <= m} + {n >= m}. *)
+(* 
 
+Inductive sumbool (A B : Prop) : Set :=
+| left : A -> { A } + { B }
+| right : B -> { A } + { B }.
+
+so the notation is either A or B holds
+using normal Nat.le wont work because there wont be an assumption in our proof
+
+ *)
+Locate le_ge_dec.
 Definition max (x y: nat): {v: nat | v >= x /\ v >= y}.
   refine (
     if le_ge_dec x y
