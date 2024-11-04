@@ -1,9 +1,10 @@
 Require Import Coq.Arith.Arith.
 (* http://adam.chlipala.net/cpdt/html/Subset.html *)
+(* Definition le_ge_dec n m : {n <= m} + {n >= m}. *)
 
 Definition max (x y: nat): {v: nat | v >= x /\ v >= y}.
   refine (
-    if le_ge_dec x y 
+    if le_ge_dec x y
     then exist _ y _
     else exist _ x _
   ).
@@ -16,6 +17,8 @@ Compute (max 4 6).
 Definition max_val x y := proj1_sig (max x y).
 
 Definition max_proof x y := proj2_sig (max x y).
+
+Print max_proof.
 
 
 (* To get just the value part *)

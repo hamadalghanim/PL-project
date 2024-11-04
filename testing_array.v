@@ -1,6 +1,7 @@
 Require Import Coq.Lists.List.
 Import ListNotations.
 Require Import Coq.Arith.Arith.
+
 Fixpoint fold_max (l: list nat) (init: nat) : nat :=
   match l with
   | [] => init
@@ -17,6 +18,7 @@ Proof.
   + apply Nat.le_max_l.
   + apply IHl.
 Qed.
+
 Lemma fold_max_spec : forall l init x,
   In x l -> x <= fold_max l init.
 Proof.

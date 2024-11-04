@@ -32,7 +32,6 @@ Proof.
     * apply Nat.le_max_r.
     * apply fold_max_init_le.
   + apply (IHl (Nat.max init a) _ H).
- 
 Qed.
 Program Definition max_program (l : list nat) : 
   {v: option nat | match v with
