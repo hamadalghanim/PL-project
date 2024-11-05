@@ -2,6 +2,12 @@ Require Import Coq.Lists.List.
 Import ListNotations.
 Require Import Coq.Arith.Arith.
 
+(*
+-----------------
+Does not represent liquid types since the "subset" is not one of the types discussed in the
+paper 
+----------------- 
+*)
 Fixpoint fold_max (l: list nat) (init: nat) : nat :=
   match l with
   | [] => init
