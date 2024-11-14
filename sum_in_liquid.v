@@ -24,5 +24,10 @@ Defined.
 Compute (proj1_sig (sum_checked 5)).
 Compute (proj2_sig (sum_checked 3)).
 
-Example test_sum_1: proj1_sig (sum_checked 3) = 6.
-Proof. reflexivity. Qed.
+Example test_sum_1: forall n, proj1_sig (sum_checked 3) = n -> n >= 0 /\ n >= 3.
+Proof.
+  intros n H.
+  subst.
+  destruct (proj2_sig (sum_checked 3)) as [H1 H2].
+  split; assumption.
+Qed.
