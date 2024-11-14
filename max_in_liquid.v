@@ -1,5 +1,6 @@
 Require Import Coq.Arith.Arith.
 Require Import Notations.
+Require Import Lia.
 (* http://adam.chlipala.net/cpdt/html/Subset.html *)
 (* Definition le_ge_dec n m : {n <= m} + {n >= m}. *)
 (* 
@@ -13,7 +14,7 @@ using normal Nat.le wont work because there wont be an assumption in our proof
 
  *)
 Locate le_ge_dec.
-
+Print le_ge_dec.
 Definition less_than_or_eq n m : {n <= m} + {n >= m}.
   intros; elim (le_lt_dec n m); auto with arith.
 Defined.
@@ -22,12 +23,11 @@ Defined.
 
 Definition max (x y: nat): {v: nat | v >= x /\ v >= y}.
   refine (
-    if less_than_or_eq x y
+    if le_ge_dec x y
     then exist _ y _
     else exist _ x _
   ).
-  - split; auto.
-  - split. auto. assumption.
+  lia. lia.
 Defined.
 
 Compute (max 4 6).

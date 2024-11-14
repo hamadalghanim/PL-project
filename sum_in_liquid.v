@@ -17,11 +17,7 @@ Program Fixpoint sum_checked (k: nat) : {v : nat | v >= 0 /\ v >= k} :=
             proj1_sig s + k
   end.
 Next Obligation.
-  split.
-  - (* v >= 0 *)
-    apply le_0_n.
-  - (* v >= k *)
-    lia.
+lia.
 Defined.
 
 
