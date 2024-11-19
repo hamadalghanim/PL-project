@@ -10,6 +10,7 @@
  *)
 Require Import Program.
 Require Import Lia.
+
 Program Fixpoint sum_checked (k: nat) : {v : nat | v >= 0 /\ v >= k} :=
   match k with
   | 0 => 0
@@ -18,6 +19,21 @@ Program Fixpoint sum_checked (k: nat) : {v : nat | v >= 0 /\ v >= k} :=
   end.
 Next Obligation.
 lia.
+Defined.
+
+Fixpoint sum_something (k: nat) : {v : nat | v >= 0 /\ v >= k}.
+  refine ( 
+    match k with
+  | 0 =>  exist _ 0 _
+  | S k' => exist _ (proj1_sig(sum_something k') + k) _
+  end
+).
+lia.
+simpl.
+destruct (sum_something k').
+split.
+- lia.
+- 
 Defined.
 
 
