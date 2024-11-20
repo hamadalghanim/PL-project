@@ -22,20 +22,18 @@ lia.
 Defined.
 
 Fixpoint sum_something (k: nat) : {v : nat | v >= 0 /\ v >= k}.
-  refine ( 
-    match k with
-  | 0 =>  exist _ 0 _
-  | S k' => exist _ (proj1_sig(sum_something k') + k) _
-  end
+  refine (
+    match k as n return (n = k -> {v : nat | v >= 0 /\ v >= n}) with
+  | 0 => fun _ => exist _ 0 _
+  | S k' => fun H => exist _ (proj1_sig (sum_something k') + k) _
+  end eq_refl
 ).
-lia.
-simpl.
-destruct (sum_something k').
-split.
 - lia.
-- 
+- lia.
 Defined.
 
+Compute (proj1_sig (sum_something 5)).
+Compute (proj2_sig (sum_something 5)).
 
 Compute (proj1_sig (sum_checked 5)).
 Compute (proj2_sig (sum_checked 3)).

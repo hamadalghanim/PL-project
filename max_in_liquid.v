@@ -26,8 +26,8 @@ Definition max (x y: nat): {v: nat | v >= x /\ v >= y}.
     if le_ge_dec x y
     then exist _ y _
     else exist _ x _
-  ).
-  lia. lia.
+  );
+  lia.
 Defined.
 
 Program Definition max_2  (x y: nat): {v: nat | v >= x /\ v >= y}:=
@@ -35,14 +35,13 @@ Program Definition max_2  (x y: nat): {v: nat | v >= x /\ v >= y}:=
     y
   else
     x.
+    (* we didnt have to use lia here weird *)
 
 Compute (proj1_sig (max_2 3 4)).
 Compute (proj2_sig (max_2 3 4)).
 
 Example test_max_1:proj1_sig( max_2 3 4) = 4.
 Proof. reflexivity. Qed.
-
-
 
 
 Compute (max 4 6).
