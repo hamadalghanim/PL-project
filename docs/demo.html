@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <link href="../custom.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body onload="document.getElementById('content').focus()">
+    <div id="header">
+        <span class="left">
+            <span class="modulename">
+                <script> document.write(document.title) </script>
+            </span>
+        </span>
+
+        <span class="button" id="toggle-proofs"></span>
+    </div>
+    <div id="content" tabindex="-1" onblur="document.getElementById('content').focus()">
+        <div id="main">
+<h1 class="libtitle">demo</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Arith.Arith.html#"><span class="id" title="library">Coq.Arith.Arith</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.micromega.Lia.html#"><span class="id" title="library">Lia</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab1"></a><h1 class="section">Demo: Liquid Types in Coq</h1>
+
+
+<div class="paragraph"> </div>
+
+    This demo illustrates the use of subset types in Coq as Liquid Types.
+    For more detailed information, refer to Adam Chlipala's book, "Certified Programming with Dependent Types" available at:
+    http://adam.chlipala.net/cpdt/html/Subset.html
+
+<div class="paragraph"> </div>
+
+<a id="lab2"></a><h2 class="section">What are Liquid Types?</h2>
+
+
+<div class="paragraph"> </div>
+
+    Liquid Types enrich existing type systems with logical predicates and let you specify and automatically verify semantic properties of your code.
+
+<div class="paragraph"> </div>
+
+    for example, what if you want the compiler to ensure that a function returns a value within a specific range
+    lets take the `index_of` function in js. this function should never return a value that is larger than the length of the array.
+    in liquid types that looks like the following:
+    <span class="inlinecode">{<span class="id" title="var">v</span>:<a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a></span> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">len</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">&gt;</span> <span class="inlinecode"><span class="id" title="var">v</span>}</span>
+    To achieve this in coq we have to rely on the subset type, which is a way to restrict a value using some proposition.
+    usually written as such <span class="inlinecode">{<span class="id" title="var">v</span>:</span> <span class="inlinecode"><a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a></span> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">v</span></span> <span class="inlinecode">≥</span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">∧</span> <span class="inlinecode"><span class="id" title="var">v</span></span> <span class="inlinecode">≥</span> <span class="inlinecode"><span class="id" title="var">y</span>}</span>
+    In this demo we will discuss our methodology approaching Liquid Types in Coq.
+<a id="lab3"></a><h2 class="section">First Attempt</h2>
+
+    Our first attempt to define a max function using subset type
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="max_not_working" class="idref" href="#max_not_working"><span class="id" title="definition">max_not_working</span></a> (<a id="x:1" class="idref" href="#x:1"><span class="id" title="binder">x</span></a> <a id="y:2" class="idref" href="#y:2"><span class="id" title="binder">y</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>): <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">{</span></a><a id="v:3" class="idref" href="#v:3"><span class="id" title="binder">v</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">:</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">|</span></a> <a class="idref" href="demo.html#v:3"><span class="id" title="variable">v</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Peano.html#73030c22bc0b1fa771c65aa5414c65f9"><span class="id" title="notation">≥</span></a> <a class="idref" href="demo.html#x:1"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a> <a class="idref" href="demo.html#v:3"><span class="id" title="variable">v</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Peano.html#73030c22bc0b1fa771c65aa5414c65f9"><span class="id" title="notation">≥</span></a> <a class="idref" href="demo.html#y:2"><span class="id" title="variable">y</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">}</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">x</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Arith.PeanoNat.html#6b7621b45fff0af5e2b2cbb2bc2d4e1d"><span class="id" title="notation">&lt;?</span></a> <span class="id" title="var">y</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">then</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#exist"><span class="id" title="constructor">exist</span></a> <span class="id" title="var">_</span> <span class="id" title="var">y</span> <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#exist"><span class="id" title="constructor">exist</span></a> <span class="id" title="var">_</span> <span class="id" title="var">x</span> <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;).<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+    As we can see above, the code does not compile because the comparison operator `&lt;?` defined as a <span class="inlinecode"><span class="id" title="var">sumbool</span></span>.
+    We need to use the <span class="inlinecode"><a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Arith.Compare_dec.html#le_ge_dec"><span class="id" title="definition">le_ge_dec</span></a></span> function instead.
+<a id="lab4"></a><h2 class="section">Second Attempt</h2>
+
+    In this attempt, we will use the `le_ge_dec` function to compare the two numbers.
+    which is defined as the following:
+    <span class="inlinecode">{<span class="id" title="var">n</span></span> <span class="inlinecode">≤</span> <span class="inlinecode"><span class="id" title="var">m</span>}</span> <span class="inlinecode">+</span> <span class="inlinecode">{<span class="id" title="var">n</span></span> <span class="inlinecode">≥</span> <span class="inlinecode"><span class="id" title="var">m</span>}</span>
+    which allows us to use both <span class="inlinecode">{<span class="id" title="var">n</span></span> <span class="inlinecode">≤</span> <span class="inlinecode"><span class="id" title="var">m</span>}</span> &amp; <span class="inlinecode">{<span class="id" title="var">n</span></span> <span class="inlinecode">≥</span> <span class="inlinecode"><span class="id" title="var">m</span>}</span> in our proofs.
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="max" class="idref" href="#max"><span class="id" title="definition">max</span></a> (<a id="x:4" class="idref" href="#x:4"><span class="id" title="binder">x</span></a> <a id="y:5" class="idref" href="#y:5"><span class="id" title="binder">y</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>): <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">{</span></a><a id="v:6" class="idref" href="#v:6"><span class="id" title="binder">v</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">:</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">|</span></a> <a class="idref" href="demo.html#v:6"><span class="id" title="variable">v</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Peano.html#73030c22bc0b1fa771c65aa5414c65f9"><span class="id" title="notation">≥</span></a> <a class="idref" href="demo.html#x:4"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a> <a class="idref" href="demo.html#v:6"><span class="id" title="variable">v</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Peano.html#73030c22bc0b1fa771c65aa5414c65f9"><span class="id" title="notation">≥</span></a> <a class="idref" href="demo.html#y:5"><span class="id" title="variable">y</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">}</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">if</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Arith.Compare_dec.html#le_ge_dec"><span class="id" title="definition">le_ge_dec</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">then</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#exist"><span class="id" title="constructor">exist</span></a> <span class="id" title="var">_</span> <span class="id" title="var">y</span> <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#exist"><span class="id" title="constructor">exist</span></a> <span class="id" title="var">_</span> <span class="id" title="var">x</span> <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;).<br/>
+&nbsp;&nbsp;<span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">lia</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+    as we can above, the definition is still looking a little bit weird since
+    we need to use the `refine` tactic to define the subset type, and then we need to use `exists` to define the value.
+    however by doing this we can for now grab the value of the function using 
+ 
+</div>
+<div class="code">
+<span class="id" title="keyword">Compute</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#proj1_sig"><span class="id" title="definition">proj1_sig</span></a> (<a class="idref" href="demo.html#max"><span class="id" title="definition">max</span></a> 1 2).<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  And we can grab the "proof" of this spefic function using
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Compute</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#proj2_sig"><span class="id" title="definition">proj2_sig</span></a> (<a class="idref" href="demo.html#max"><span class="id" title="definition">max</span></a> 1 2).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  However, trying to define a more complex function such as `sum_k` as a fixpoint we start facing some complexity.
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="sum_k" class="idref" href="#sum_k"><span class="id" title="definition">sum_k</span></a> (<a id="k:7" class="idref" href="#k:7"><span class="id" title="binder">k</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">{</span></a><a id="v:8" class="idref" href="#v:8"><span class="id" title="binder">v</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">:</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">|</span></a> <a class="idref" href="demo.html#v:8"><span class="id" title="variable">v</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Peano.html#73030c22bc0b1fa771c65aa5414c65f9"><span class="id" title="notation">≥</span></a> 0 <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a> <a class="idref" href="demo.html#v:8"><span class="id" title="variable">v</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Peano.html#73030c22bc0b1fa771c65aa5414c65f9"><span class="id" title="notation">≥</span></a> <a class="idref" href="demo.html#k:7"><span class="id" title="variable">k</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">}</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">k</span> <span class="id" title="keyword">as</span> <span class="id" title="var">n</span> <span class="id" title="keyword">return</span> (<a class="idref" href="demo.html#n:10"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <span class="id" title="var">k</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">{</span></a><a id="v:11" class="idref" href="#v:11"><span class="id" title="binder"><span id="v:14" class="id">v</span></span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">:</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">|</span></a> <a class="idref" href="demo.html#v:11"><span class="id" title="variable">v</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Peano.html#73030c22bc0b1fa771c65aa5414c65f9"><span class="id" title="notation">≥</span></a> 0 <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a> <a class="idref" href="demo.html#v:11"><span class="id" title="variable">v</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Peano.html#73030c22bc0b1fa771c65aa5414c65f9"><span class="id" title="notation">≥</span></a> <a class="idref" href="demo.html#n:10"><span class="id" title="variable">n</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">}</span></a>) <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| 0 ⇒ <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#exist"><span class="id" title="constructor">exist</span></a> <span class="id" title="var">_</span> 0 <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">k'</span> ⇒ <span class="id" title="keyword">fun</span> <a id="H:12" class="idref" href="#H:12"><span class="id" title="binder"><span id="H:15" class="id">H</span></span></a> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#exist"><span class="id" title="constructor">exist</span></a> <span class="id" title="var">_</span> (<a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#proj1_sig"><span class="id" title="definition">proj1_sig</span></a> (<span class="id" title="var">sum_k</span> <span class="id" title="var">k'</span>) <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Peano.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <span class="id" title="var">k</span>) <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Logic.html#eq_refl"><span class="id" title="constructor">eq_refl</span></a><br/>
+).<br/>
+- <span class="id" title="var">lia</span>.<br/>
+- <span class="id" title="var">lia</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#proj1_sig"><span class="id" title="definition">proj1_sig</span></a> (<a class="idref" href="demo.html#sum_k"><span class="id" title="definition">sum_k</span></a> 5).<br/>
+<span class="id" title="keyword">Compute</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#proj2_sig"><span class="id" title="definition">proj2_sig</span></a> (<a class="idref" href="demo.html#sum_k"><span class="id" title="definition">sum_k</span></a> 5).<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  As we can see above, definiting a simple fixpoint requires some heavy type juggling just to make it work.
+  Reading more about tactics in coq we found the <span class="inlinecode"><span class="id" title="var">Program</span></span> tactic.
+  https://coq.inria.fr/doc/V8.18.0/refman/addendum/program.htmlprogram-definition
+  ** Third Attempt
+  In this attempt, we will use the [Program] tactic to define the sum_k function.
+  and we will see how it simplifies the definition of functions/fixpoints with subset type in Coq.
+   *
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Program Fixpoint</span> <a id="sum_k_program" class="idref" href="#sum_k_program"><span class="id" title="definition">sum_k_program</span></a> (<a id="k:16" class="idref" href="#k:16"><span class="id" title="binder">k</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">{</span></a><a id="v:17" class="idref" href="#v:17"><span class="id" title="binder">v</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">:</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">|</span></a> <a class="idref" href="demo.html#v:17"><span class="id" title="variable">v</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Peano.html#73030c22bc0b1fa771c65aa5414c65f9"><span class="id" title="notation">≥</span></a> 0 <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a> <a class="idref" href="demo.html#v:17"><span class="id" title="variable">v</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Peano.html#73030c22bc0b1fa771c65aa5414c65f9"><span class="id" title="notation">≥</span></a> <a class="idref" href="demo.html#k:16"><span class="id" title="variable">k</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">}</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="demo.html#k:16"><span class="id" title="variable">k</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| 0 ⇒ 0<br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">k'</span> ⇒ <span class="id" title="keyword">let</span> <a id="s:20" class="idref" href="#s:20"><span class="id" title="binder">s</span></a> := <a class="idref" href="demo.html#sum_k_program:18"><span class="id" title="definition">sum_k_program</span></a> <span class="id" title="var">k'</span> <span class="id" title="tactic">in</span> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#proj1_sig"><span class="id" title="definition">proj1_sig</span></a> <a class="idref" href="demo.html#s:20"><span class="id" title="variable">s</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Peano.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="demo.html#k:16"><span class="id" title="variable">k</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">Next</span> <span class="id" title="keyword">Obligation</span>.<br/>
+<span class="id" title="var">lia</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Even max function is easier to define using program tactic 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Program Definition</span> <a id="max_2" class="idref" href="#max_2"><span class="id" title="definition">max_2</span></a>  (<a id="x:21" class="idref" href="#x:21"><span class="id" title="binder">x</span></a> <a id="y:22" class="idref" href="#y:22"><span class="id" title="binder">y</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>): <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">{</span></a><a id="v:23" class="idref" href="#v:23"><span class="id" title="binder">v</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">:</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">|</span></a> <a class="idref" href="demo.html#v:23"><span class="id" title="variable">v</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Peano.html#73030c22bc0b1fa771c65aa5414c65f9"><span class="id" title="notation">≥</span></a> <a class="idref" href="demo.html#x:21"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a> <a class="idref" href="demo.html#v:23"><span class="id" title="variable">v</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Peano.html#73030c22bc0b1fa771c65aa5414c65f9"><span class="id" title="notation">≥</span></a> <a class="idref" href="demo.html#y:22"><span class="id" title="variable">y</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">}</span></a>:=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">if</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Arith.Compare_dec.html#le_ge_dec"><span class="id" title="definition">le_ge_dec</span></a> <a class="idref" href="demo.html#x:21"><span class="id" title="variable">x</span></a> <a class="idref" href="demo.html#y:22"><span class="id" title="variable">y</span></a> <span class="id" title="keyword">then</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="demo.html#y:22"><span class="id" title="variable">y</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">else</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="demo.html#x:21"><span class="id" title="variable">x</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab5"></a><h2 class="section">How does the <span class="inlinecode"><span class="id" title="var">Program</span></span> tactic work?</h2>
+
+  underlying the <span class="inlinecode"><span class="id" title="var">Program</span></span> tactic is a type checker that checks the correctness of the program.
+  Named Russel https://sozeau.gitlabpages.inria.fr/www/research/russell.en.html. 
+  The type checker is able to infer the type of the program and check if it is correct. and in some cases
+  doesnt even require us to prove something like the max_2 function.
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Compute</span> (<a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#proj1_sig"><span class="id" title="definition">proj1_sig</span></a> (<a class="idref" href="demo.html#max_2"><span class="id" title="definition">max_2</span></a> 3 4)).<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+    <br/>
+<span class="inlinecode">&nbsp;&nbsp;&nbsp;&nbsp;= 4
+<div class="paragraph"> </div>
+
+</span>
+</div>
+<div class="code">
+<span class="id" title="keyword">Compute</span> (<a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#proj2_sig"><span class="id" title="definition">proj2_sig</span></a> (<a class="idref" href="demo.html#max_2"><span class="id" title="definition">max_2</span></a> 3 4)).<br/>
+</div>
+
+<div class="doc">
+    <br/>
+<span class="inlinecode">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span class="id" title="var">conj</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">match</span> <span class="id" title="var">Nat.succ_le_mono</span> 2 3 <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">conj</span> <span class="id" title="var">x</span> <span class="id" title="var">_</span> ⇒ <span class="id" title="var">x</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">match</span> <span class="id" title="var">Nat.succ_le_mono</span> 1 2 <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">conj</span> <span class="id" title="var">x</span> <span class="id" title="var">_</span> ⇒ <span class="id" title="var">x</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span> (<span class="id" title="keyword">match</span> <span class="id" title="var">Nat.succ_le_mono</span> 0 1 <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">conj</span> <span class="id" title="var">x</span> <span class="id" title="var">_</span> ⇒ <span class="id" title="var">x</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span> (<span class="id" title="var">Nat.le_0_l</span> 1)))) (<span class="id" title="var">le_n</span> 4)      : <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#proj1_sig"><span class="id" title="definition">proj1_sig</span></a> (<a class="idref" href="demo.html#max_2"><span class="id" title="definition">max_2</span></a> 3 4) ≥ 3 ∧<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#proj1_sig"><span class="id" title="definition">proj1_sig</span></a> (<a class="idref" href="demo.html#max_2"><span class="id" title="definition">max_2</span></a> 3 4) ≥ 4
+<div class="paragraph"> </div>
+
+</span>
+</div>
+<div class="code">
+<span class="id" title="keyword">Example</span> <a id="test_max_1" class="idref" href="#test_max_1"><span class="id" title="definition">test_max_1</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#proj1_sig"><span class="id" title="definition">proj1_sig</span></a>( <a class="idref" href="demo.html#max_2"><span class="id" title="definition">max_2</span></a> 3 4) <a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 4.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  Even the proof generated from <span class="inlinecode"><a class="idref" href="http://coq.inria.fr/distrib/V8.18.0/stdlib//Coq.Init.Specif.html#proj2_sig"><span class="id" title="definition">proj2_sig</span></a></span> is easier to read
+</div>
+<div class="code">
+</div>
+</div>
+<div id="footer">
+    Generated by <a href="http://coq.inria.fr/">coqdoc</a> and improved with <a
+        href="https://github.com/coq-community/coqdocjs">CoqdocJS</a>
+</div>
+</div>
+</body>
+
+</html>
