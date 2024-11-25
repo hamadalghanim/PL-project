@@ -11,6 +11,12 @@
 Require Import Program.
 Require Import Lia.
 
+
+Print proj1_sig.
+Print proj2_sig.
+Locate Program.
+(* n = k + (k-1) + (k-2) + ... + 1 + 0 *)
+
 Program Fixpoint sum_checked (k: nat) : {v : nat | v >= 0 /\ v >= k} :=
   match k with
   | 0 => 0

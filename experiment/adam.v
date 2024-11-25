@@ -14,3 +14,5 @@ Definition pred_strong1 (n : nat) : n > 0 -> nat :=
     | O => fun pf : 0 > 0 => match zgtz pf with end
     | S n' => fun _ => n'
   end.
+
+

@@ -61,6 +61,8 @@ Compute (proj2_sig (max 3 4)).
 
 Compute (max_val 3 4).
 
+
+
 (* You can also do test cases *)
 Example test_max_1: max_val 3 4 = 4.
 Proof. reflexivity. Qed.
