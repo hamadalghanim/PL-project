@@ -4,7 +4,8 @@ Require Import Lia.
 
     This demo illustrates the use of subset types in Coq as Liquid Types.
     For more detailed information, refer to Adam Chlipala's book, "Certified Programming with Dependent Types" available at:
-    http://adam.chlipala.net/cpdt/html/Subset.html
+    
+    # <a href="http://adam.chlipala.net/cpdt/html/Subset.html">http://adam.chlipala.net/cpdt/html/Subset.html</a> #
 
     ** What are Liquid Types? 
     
@@ -54,13 +55,13 @@ Defined.
  **)
 Compute proj1_sig (max 1 2).
 (** 
-  And we can grab the "proof" of this spefic function using
+  And we can grab the "proof" of this specific function using
 
 **)
 Compute proj2_sig (max 1 2).
 
 (**
-  However, trying to define a more complex function such as `sum_k` as a fixpoint we start facing some complexity.
+  However, trying to define a more complex function such as `sum_k` as a Fixpoint we start facing some complexity.
 **)
 Fixpoint sum_k (k: nat) : {v : nat | v >= 0 /\ v >= k}.
   refine (
@@ -76,13 +77,19 @@ Defined.
 Compute proj1_sig (sum_k 5). 
 Compute proj2_sig (sum_k 5).
 (** 
-  As we can see above, definiting a simple fixpoint requires some heavy type juggling just to make it work.
+  As we can see above, defining a simple Fixpoint requires some heavy type juggling just to make it work.
   Reading more about tactics in coq we found the [Program] tactic.
-  https://coq.inria.fr/doc/V8.18.0/refman/addendum/program.html#program-definition
-  ** Third Attempt
+
+  # <a href="http://coq.inria.fr/doc/V8.18.0/refman/addendum/program.html">http://coq.inria.fr/doc/V8.18.0/refman/addendum/program.html</a> #
+
+*)
+
+(**
+  ** Third Attempt.
+    
   In this attempt, we will use the [Program] tactic to define the sum_k function.
-  and we will see how it simplifies the definition of functions/fixpoints with subset type in Coq.
-   **)
+  and we will see how it simplifies the definition of functions/Fixpoints with subset type in Coq.
+*)
 
 Program Fixpoint sum_k_program (k: nat) : {v : nat | v >= 0 /\ v >= k} :=
   match k with

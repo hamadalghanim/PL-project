@@ -33,7 +33,10 @@
 
     This demo illustrates the use of subset types in Coq as Liquid Types.
     For more detailed information, refer to Adam Chlipala's book, "Certified Programming with Dependent Types" available at:
-    http://adam.chlipala.net/cpdt/html/Subset.html
+
+<div class="paragraph"> </div>
+
+     <a href="http://adam.chlipala.net/cpdt/html/Subset.html">http://adam.chlipala.net/cpdt/html/Subset.html</a> 
 
 <div class="paragraph"> </div>
 
@@ -115,7 +118,7 @@
 
 <div class="paragraph"> </div>
 
-  And we can grab the "proof" of this spefic function using
+  And we can grab the "proof" of this specific function using
 
 <div class="paragraph"> </div>
 
@@ -128,7 +131,7 @@
 </div>
 
 <div class="doc">
-  However, trying to define a more complex function such as `sum_k` as a fixpoint we start facing some complexity.
+  However, trying to define a more complex function such as `sum_k` as a Fixpoint we start facing some complexity.
 
 </div>
 <div class="code">
@@ -152,13 +155,27 @@
 
 <div class="paragraph"> </div>
 
-  As we can see above, definiting a simple fixpoint requires some heavy type juggling just to make it work.
+  As we can see above, defining a simple Fixpoint requires some heavy type juggling just to make it work.
   Reading more about tactics in coq we found the <span class="inlinecode"><span class="id" title="var">Program</span></span> tactic.
-  https://coq.inria.fr/doc/V8.18.0/refman/addendum/program.htmlprogram-definition
-  ** Third Attempt
-  In this attempt, we will use the [Program] tactic to define the sum_k function.
-  and we will see how it simplifies the definition of functions/fixpoints with subset type in Coq.
-   *
+
+<div class="paragraph"> </div>
+
+   <a href="http://coq.inria.fr/doc/V8.18.0/refman/addendum/program.htmlprogram-definition"&gt;http://coq.inria.fr/doc/V8.18.0/refman/addendum/program.html&lt;/a&gt; 
+
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+<a id="lab5"></a><h2 class="section">Third Attempt.</h2>
+
+
+<div class="paragraph"> </div>
+
+  In this attempt, we will use the <span class="inlinecode"><span class="id" title="var">Program</span></span> tactic to define the sum_k function.
+  and we will see how it simplifies the definition of functions/Fixpoints with subset type in Coq.
+
 </div>
 <div class="code">
 
@@ -192,7 +209,7 @@ Even max function is easier to define using program tactic
 </div>
 
 <div class="doc">
-<a id="lab5"></a><h2 class="section">How does the <span class="inlinecode"><span class="id" title="var">Program</span></span> tactic work?</h2>
+<a id="lab6"></a><h2 class="section">How does the <span class="inlinecode"><span class="id" title="var">Program</span></span> tactic work?</h2>
 
   underlying the <span class="inlinecode"><span class="id" title="var">Program</span></span> tactic is a type checker that checks the correctness of the program.
   Named Russel https://sozeau.gitlabpages.inria.fr/www/research/russell.en.html. 
