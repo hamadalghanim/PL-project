@@ -111,7 +111,7 @@ Program Definition max_2  (x y: nat): {v: nat | v >= x /\ v >= y}:=
 
 (**
   ** How does the [Program] tactic work?
-  underlying the [Program] tactic is a type checker that checks the correctness of the program.
+  underlying the [Program] tactic is the Coq type checker, it checks the correctness of the program.
   Named Russel https://sozeau.gitlabpages.inria.fr/www/research/russell.en.html. 
   The type checker is able to infer the type of the program and check if it is correct. and in some cases
   doesnt even require us to prove something like the max_2 function.
@@ -138,9 +138,57 @@ Compute (proj2_sig (max_2 3 4)).
                                                   proj1_sig (max_2 3 4) >= 4
     ]]
 **)
-Example test_max_1:proj1_sig( max_2 3 4) = 4.
+Example test_max_1:proj1_sig(max_2 3 4) = 4.
 Proof. reflexivity. Qed.
 
 (** 
   Even the proof generated from [proj2_sig] is easier to read
+
+  ** More Examples From The Liquid Types Paper
 **)
+
+Program Fixpoint foldn {A: Type } (n : nat) (i : A) (b : A) (f : {v : nat | 0 <= v /\ v < n}  -> A -> A):  A :=
+  match n with
+  | 0 => b
+  | S n' => foldn n' (f n' i) b f
+  end.
+Next Obligation.
+lia.
+Defined.
+
+
+(*
+let arraymax a =
+let am l m = max (sub a l) m in
+foldn (len a) 0 am
+
+*)
+
+(* import list *)
+
+Require Import List.
+Import ListNotations.
+
+Program Definition arraymax (a: list nat) : {v: nat | v >= 0} :=
+  let am l m := max_2 (nth l a 0) m
+    in foldn (length a) (length a) 0 am.
+Next Obligation.
+lia.
+Defined.
+
+(**
+  ** Conclusion
+  In this demo, we have shown how to use subset types in Coq to define Liquid Types.
+  We have shown how to define a max function, a sum_k function, and an arraymax function using subset types.
+  We have also shown how to use the [Program] tactic to simplify the definition of functions with subset types.
+
+  ** Future Work
+  In the future, we plan to explore more complex examples of Liquid Types in Coq.
+  We also plan to explore the use of dependent types in Coq to define Liquid Types.
+  We can also implement the Liquid Type as an inductive type in Coq. which may simplify the definition of functions with subset types.
+
+*)
+
+
+
+
