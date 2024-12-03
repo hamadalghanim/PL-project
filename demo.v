@@ -95,7 +95,7 @@ Program Fixpoint sum_k_program (k: nat) : {v : nat | v >= 0 /\ v >= k} :=
   match k with
   | 0 => 0
   | S k' => let s := sum_k_program k' in 
-            proj1_sig s + k
+             s + k
   end.
 Next Obligation.
 lia.
