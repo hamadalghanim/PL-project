@@ -33,8 +33,9 @@ Proof.
     * apply fold_max_init_le.
   + apply (IHl (Nat.max init a) _ H).
 Qed.
+
 Program Definition max_program (l : list nat) : 
-  {v: option nat | match v with
+  {v: option nat  | match v with
                   | Some n => forall x, In x l -> x <= n
                   | None => l = []
                   end} :=

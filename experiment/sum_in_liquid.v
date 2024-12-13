@@ -44,7 +44,8 @@ Compute (proj2_sig (sum_something 5)).
 Compute (proj1_sig (sum_checked 5)).
 Compute (proj2_sig (sum_checked 3)).
 
-Example test_sum_1: forall n, proj1_sig (sum_checked 3) = n -> n >= 0 /\ n >= 3.
+Example test_sum_1: 
+forall n, proj1_sig (sum_checked 3) = n -> n >= 0 /\ n >= 3.
 Proof.
   intros n H.
   subst.

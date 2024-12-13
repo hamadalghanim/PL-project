@@ -19,8 +19,6 @@ Definition less_than_or_eq n m : {n <= m} + {n >= m}.
   intros; elim (le_lt_dec n m); auto with arith.
 Defined.
 
-
-
 Definition max (x y: nat): {v: nat | v >= x /\ v >= y}.
   refine (
     if le_ge_dec x y
