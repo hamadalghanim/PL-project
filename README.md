@@ -13,9 +13,7 @@ Russel is the underlying type system for Coq. -->
 - problems it solves
 - liquid types
 - paper examples
-- written in coq without program
-- with program
-- conclusion and link to repo
+- why this is exciting
 
 # Liquid Types in Coq
 
