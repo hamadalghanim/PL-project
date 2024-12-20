@@ -77,7 +77,7 @@ Automatic inference of numeric relationships
 The magical part? The type checker automatically proves that the result satisfies the required properties without manual proof terms.
 
 ## 3. Higher-Order Functions with Liquid Types
-coqCopyProgram Definition max_program (l : list nat) : 
+Program Definition max_program (l : list nat) : 
   {v: option nat | match v with
                   | Some n => forall x, In x l -> x <= n
                   | None => l = []
@@ -94,7 +94,7 @@ Complex specifications using match in types
 Automated handling of all cases including empty lists
 
 ## 4. Array Sum with Bounds Checking
-coqCopyProgram Fixpoint sum_checked (k: nat) : {v : nat | v >= 0 /\ v >= k} :=
+Program Fixpoint sum_checked (k: nat) : {v : nat | v >= 0 /\ v >= k} :=
   match k with
   | 0 => 0
   | S k' => let s := sum_checked k' in 
